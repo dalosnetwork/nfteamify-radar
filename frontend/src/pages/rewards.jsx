@@ -73,7 +73,7 @@ const Rewards = () => {
                     {/* {user?.data?.user?.balance !== undefined
                       ? user.data.user.balance
                       : "Loading..."} */}
-                      {sessionStorage.getItem("balance")}
+                      6100
                   </span>
                 </div>
               </div>

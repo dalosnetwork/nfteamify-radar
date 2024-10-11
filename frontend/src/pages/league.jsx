@@ -96,6 +96,7 @@ const League = () => {
    const closeWalletModal = () => {
      setWalletModalOpen(false);
    };
+
    
    return (
      <>
@@ -113,7 +114,9 @@ const League = () => {
                 <img onClick={()=>openWalletModal()} className="ms-2" src={walletimg} alt="" />
                 <div className="budgetWrapper">
                   <img className="token" src={tokenimg} alt="" />
-                  <span className="budget">{user?.data?.user?.balance !== undefined ? user.data.user.balance : 'Loading...'}</span>
+                  <span className="budget">{/* {user?.data?.user?.balance !== undefined ? user.data.user.balance : 'Loading...'} */}
+                    6100
+                  </span>
                 </div>
               </div>
             </div>
@@ -126,7 +129,7 @@ const League = () => {
                     <div className="row m-auto" style={{width:"100%"}}>
                       <div className="col-12 text-center">
                         <h1 className="header1 mt-3">Prize Pool <span onClick={()=>openInfoModal()}><img src={infoimg} className="info" alt="" /></span></h1>
-                        <p className="prize">{league.data.prize.toLocaleString('en-US')}</p>
+                        <p className="prize">{league.length !== 0 && league.data.prize.toLocaleString('en-US')}</p>
                       </div>
                       <div className="col-12 p-0 d-flex justify-content-center">
                         <img src={podium} className="podium" alt="" />

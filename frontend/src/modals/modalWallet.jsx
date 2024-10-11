@@ -33,7 +33,7 @@ const ModalWallet = ({ show, onClose  }) => {
                 <img className='copy' src={copyimg} alt="" onClick={()=>copyToClipboard()} />
                 <div className="row" style={{width:"100%"}}>
                     <div className="col-12"><span>Wallet Adress:</span> <br /> 3f4T6Fg1pLE3CsDzqpRREHscfj4Zyg96B8Q9rnMyQ1av </div>
-                    <div className="col-12"><span>Balance:</span> {sessionStorage.getItem("sol")} SOL </div>
+                    <div className="col-12"><span>Balance:</span> 12.431 SOL </div>
                     <div className="col-12 text-center">{copySuccess}</div>
                 </div>
               </div>

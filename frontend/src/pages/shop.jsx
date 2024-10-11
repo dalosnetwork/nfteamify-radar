@@ -19,6 +19,7 @@ import ModalBuyRadar from "../modals/modalBuyRadar";
 import Wallet from "../modals/wallet";
 import ModalWallet from "../modals/modalWallet.jsx";
 import walletimg from "../design/assets/wallet.svg"
+import coinimg from "../design/assets/coin.svg"
 
 
 const Shop = () => {
@@ -31,10 +32,16 @@ const Shop = () => {
   const [data, setData] = useState({});
   const [data1, setData1] = useState({});
 
+
+  const [tempBalance, setTempBalance] = useState(6600);
+  const [tempSol, setTempSol] = useState(12);
+
   const { packages } = useSelector((state) => state.packages);
   const { market } = useSelector((state) => state.market);
   const { user } = useSelector((state) => state.user);
   const { deck } = useSelector((state) => state.deck);
+
+
 
   useEffect(() => {
     if (user && user.length === 0) {
@@ -90,7 +97,7 @@ const Shop = () => {
     setBuyRadarOpen(false);
   };
 
-  const handleBuyPackage = async (p) => {
+  const handleBuyPackage = async (p, price) => {
     try {
       const response = await buyPackage(p);
       if (response) {
@@ -103,6 +110,7 @@ const Shop = () => {
     } catch (error) {
       console.error("Error purchasing package:", error);
     }
+    setTempBalance(tempBalance-price)
   };
 
   const getImageSource = (pack) => {
@@ -192,7 +200,7 @@ const Shop = () => {
 
   return (
     <>
-      <ModalWallet show={isWalletModalOpen} onClose={closeWalletModal} />
+      <ModalWallet show={isWalletModalOpen} onClose={closeWalletModal}/>
       <ModalCard show={isModalOpen} onClose={closeModal} data={data} />
       <ModalBuyRadar show={isBuyRadarOpen} onClose={closeBuyRadar} />
       <ModalBuy show={isBuyOpen} onClose={closeBuy} data={data1} />
@@ -214,7 +222,7 @@ const Shop = () => {
                     {/* {user?.data?.user?.balance !== undefined
                       ? user.data.user.balance
                       : "Loading..."} */}
-                      {sessionStorage.getItem("balance")}
+                      {tempBalance}
                   </span>
                 </div>
               </div>
@@ -253,8 +261,9 @@ const Shop = () => {
                         <div className="col m-auto p-0 d-flex justify-content-center">
                           <img
                             className="img img-fluid"
-                            src={tokenimg}
+                            src={coinimg}
                             alt=""
+                            style={{boxShadow:"none"}}
                           />
                         </div>
                         <div className="col">
@@ -264,14 +273,14 @@ const Shop = () => {
                           </div>
                           <div className="col-12">
                             <span className="description">
-                              Buy +1000 point for 0.1 SOL
+                              Buy +1000 point for 0.1 SOL
                             </span>
                           </div>
                           <div className="col-12 d-flex justify-content-end mt-3">
                             <span className="price my-auto">
                               0.1 <img src={solimg} alt="" />
                             </span>
-                            <button className="buy" onClick={()=>buyForRadar()}>
+                            <button className="buy" onClick={()=>setTempBalance(tempBalance+1000)}>
                               BUY
                             </button>
                           </div>
@@ -305,8 +314,7 @@ const Shop = () => {
                                   {pack.price} <img src={tokenimg} alt="" />
                                 </span>
                                 <button
-                                  /* onClick={() => handleBuyPackage(pack.package)} */
-                                  onClick={()=>sellForRadar(pack.price)}
+                                  onClick={() => handleBuyPackage(pack.package, pack.price)}
                                   className="buy"
                                   style={{ borderColor: pack.color }}
                                 >

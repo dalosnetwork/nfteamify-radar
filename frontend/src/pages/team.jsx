@@ -160,7 +160,7 @@ const Team = () => {
                   <div className="budgetWrapper">
                     <img className="token" src={tokenimg} alt="" />
                     <span className="budget">{/* {user?.data?.user?.balance !== undefined ? user.data.user.balance : 'Loading...'} */}
-                    {sessionStorage.getItem("balance")}
+                      6100
                     </span>
                   </div>
                 </div>
