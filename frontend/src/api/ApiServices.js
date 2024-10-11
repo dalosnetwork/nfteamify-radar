@@ -1,9 +1,11 @@
 import axios from "axios";
 
-const BASE_URL = process.env.REACT_APP_API_KEY;
+/* const BASE_URL = process.env.REACT_APP_API_KEY; */
 /* const TEST_USER = process.env.REACT_APP_TEST_USER; */
 /* const TEST_USER = "gAAAAABmsy7iW3eDSt9SsRN2xgERo40J3lsfRgVADFysexVp06QpJHgJ1wqfu2MY2o_mvhVbaOEpmHdGDmYeaDWLuXpCHLcb1w=="; */
 /* const TEST_USER = sessionStorage.getItem("nfteamify"); */
+
+const BASE_URL = "https://radarapi.nfteamify.com";
 
 const urlParams = new URLSearchParams(window.location.search);
 const TEST_USER = urlParams.get('user');
@@ -319,6 +321,28 @@ export const completeMission = async (missionId) => {
       return { status: 403, message: "Forbidden" };
     } else {
       console.error('Error completing mission:', error);
+      return null;
+    }
+  }
+};
+
+
+export const getUserBalance = async (userId) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/user_balance?user_id=${TEST_USER}`);
+
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      console.error('Failed to fetch user balance:', response.statusText);
+      return null;
+    }
+  } catch (error) {
+    if (error.response && error.response.status === 403) {
+      console.error('Access denied: ', error.response.data);
+      return { status: 403, message: "Access Denied" };
+    } else {
+      console.error('Error fetching user balance:', error);
       return null;
     }
   }

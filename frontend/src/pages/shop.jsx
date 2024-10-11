@@ -6,6 +6,7 @@ import fetchAllRedux from "../redux/fetchAllRedux";
 import ModalCard from "../modals/modalCard";
 import ModalBuy from "../modals/modalBuy";
 import tokenimg from "../design/assets/token.png";
+import solimg from "../design/assets/sol.png";
 import bronze from "../design/assets/bronze.png";
 import silver from "../design/assets/silver.png";
 import gold from "../design/assets/gold.png";
@@ -14,14 +15,19 @@ import filtre from "../design/assets/filtre.svg";
 import card from "../design/assets/card.png";
 import { buyPackage, callbackFromSale } from "../api/ApiServices";
 import MobilePage from "../modals/mobile";
+import ModalBuyRadar from "../modals/modalBuyRadar";
+import Wallet from "../modals/wallet";
+import ModalWallet from "../modals/modalWallet.jsx";
+import walletimg from "../design/assets/wallet.svg"
+
 
 const Shop = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const [isMarket, setIsMarket] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const [isBuyOpen, setBuyOpen] = useState(false);
+  const [isBuyRadarOpen, setBuyRadarOpen] = useState(false);
   const [data, setData] = useState({});
   const [data1, setData1] = useState({});
 
@@ -37,7 +43,13 @@ const Shop = () => {
   }, [user, dispatch]);
 
   const openModal = (txt, btn1, btn2, player) => {
-    const newData = { text: txt, image: card, btn1: btn1, btn2: btn2, player: player };
+    const newData = {
+      text: txt,
+      image: card,
+      btn1: btn1,
+      btn2: btn2,
+      player: player,
+    };
     setData(newData);
     setModalOpen(true);
   };
@@ -47,13 +59,35 @@ const Shop = () => {
   };
 
   const openBuy = (player) => {
-    const newData = { text: "1", image: card, btn1: "btn1", btn2: "btn2", player: player };
+    const newData = {
+      text: "1",
+      image: card,
+      btn1: "btn1",
+      btn2: "btn2",
+      player: player,
+    };
     setData1(newData);
     setBuyOpen(true);
   };
 
   const closeBuy = () => {
     setBuyOpen(false);
+  };
+
+  const openBuyRadar = (player) => {
+    const newData = {
+      text: "1",
+      image: card,
+      btn1: "btn1",
+      btn2: "btn2",
+      player: player,
+    };
+    setData1(newData);
+    setBuyRadarOpen(true);
+  };
+
+  const closeBuyRadar = () => {
+    setBuyRadarOpen(false);
   };
 
   const handleBuyPackage = async (p) => {
@@ -85,18 +119,21 @@ const Shop = () => {
   };
 
   // Safely create a set of player_ids in your deck for fast lookup
-  const deckPlayerIds = deck && deck.data ? new Set(deck.data.map(player => player.player_id)) : new Set();
+  const deckPlayerIds =
+    deck && deck.data
+      ? new Set(deck.data.map((player) => player.player_id))
+      : new Set();
 
-  const [searchTerm, setSearchTerm] = useState('');
-
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredPlayers = market?.data?.filter((player) =>
-    player.name.toLowerCase().includes(searchTerm.toLowerCase())
-  ) || [];
+  const filteredPlayers =
+    market?.data?.filter((player) =>
+      player.name.toLowerCase().includes(searchTerm.toLowerCase())
+    ) || [];
 
   const handleCallbackFromSale = async (player) => {
     try {
@@ -111,9 +148,53 @@ const Shop = () => {
     }
   };
 
+  const [isWalletModalOpen, setWalletModalOpen] = useState(false);
+  
+  const openWalletModal = () => {
+     setWalletModalOpen(true);
+   };
+  
+  const closeWalletModal = () => {
+    setWalletModalOpen(false);
+  };
+
+  const [balance, setBalance] = useState(
+    parseFloat(sessionStorage.getItem("balance")) || 0
+  );
+  const [sol, setSol] = useState(parseFloat(sessionStorage.getItem("sol")) || 0);
+
+  useEffect(() => {
+    // Sync the state with sessionStorage when component mounts
+    const storedBalance = parseFloat(sessionStorage.getItem("balance"));
+    const storedSol = parseFloat(sessionStorage.getItem("sol"));
+
+    if (storedBalance) setBalance(storedBalance);
+    if (storedSol) setSol(storedSol);
+  }, []);
+
+  const buyForRadar = async () => {
+    const newSol = sol - 0.1;
+    const newBalance = balance + 1000;
+
+    sessionStorage.setItem("sol", newSol);
+    sessionStorage.setItem("balance", newBalance);
+
+    setSol(newSol);
+    setBalance(newBalance); // Update state to trigger re-render
+  };
+
+  const sellForRadar = async (x) => {
+    const newBalance = balance - x;
+
+    sessionStorage.setItem("balance", newBalance);
+    setBalance(newBalance); // Update state to trigger re-render
+  };
+
   return (
     <>
+      <ModalWallet show={isWalletModalOpen} onClose={closeWalletModal} />
       <ModalCard show={isModalOpen} onClose={closeModal} data={data} />
+      <ModalBuyRadar show={isBuyRadarOpen} onClose={closeBuyRadar} />
       <ModalBuy show={isBuyOpen} onClose={closeBuy} data={data1} />
       <MobilePage>
         <div id="shop">
@@ -122,10 +203,19 @@ const Shop = () => {
               <div className="col-2 my-auto">
                 <h1 className="title m-0">MARKET</h1>
               </div>
-              <div className="col-2 d-flex" style={{ flexDirection: "row-reverse" }}>
+              <div
+                className="col-2 d-flex"
+                style={{ flexDirection: "row-reverse" }}
+                >
+                <img onClick={()=>openWalletModal()} className="ms-2" src={walletimg} alt="" />
                 <div className="budgetWrapper">
                   <img className="token" src={tokenimg} alt="" />
-                  <span className="budget">{user?.data?.user?.balance !== undefined ? user.data.user.balance : 'Loading...'}</span>
+                  <span className="budget">
+                    {/* {user?.data?.user?.balance !== undefined
+                      ? user.data.user.balance
+                      : "Loading..."} */}
+                      {sessionStorage.getItem("balance")}
+                  </span>
                 </div>
               </div>
             </div>
@@ -157,25 +247,66 @@ const Shop = () => {
                 <>
                   <div className="col-12 pt-2 p-0 scroll">
                     <div className="packWrapper">
+                      <div
+                        className="row packCard"
+                      >
+                        <div className="col m-auto p-0 d-flex justify-content-center">
+                          <img
+                            className="img img-fluid"
+                            src={tokenimg}
+                            alt=""
+                          />
+                        </div>
+                        <div className="col">
+                          <div className="col-12">
+                            <span className="title">BUY POINT
+                            </span>
+                          </div>
+                          <div className="col-12">
+                            <span className="description">
+                              Buy +1000 point for 0.1 SOL
+                            </span>
+                          </div>
+                          <div className="col-12 d-flex justify-content-end mt-3">
+                            <span className="price my-auto">
+                              0.1 <img src={solimg} alt="" />
+                            </span>
+                            <button className="buy" onClick={()=>buyForRadar()}>
+                              BUY
+                            </button>
+                          </div>
+                        </div>
+                      </div>
                       {packages.data &&
                         packages.data.map((pack, index) => (
-                          <div key={index} className="row packCard" style={{ color: pack.color }}>
+                          <div
+                            key={index}
+                            className="row packCard"
+                            style={{ color: pack.color }}
+                          >
                             <div className="col m-auto p-0 d-flex justify-content-center">
-                              <img className="img img-fluid" src={getImageSource(pack)} alt="" />
+                              <img
+                                className="img img-fluid"
+                                src={getImageSource(pack)}
+                                alt=""
+                              />
                             </div>
                             <div className="col">
                               <div className="col-12">
                                 <span className="title">{pack.package}</span>
                               </div>
                               <div className="col-12">
-                                <span className="description">{pack.description}</span>
+                                <span className="description">
+                                  {pack.description}
+                                </span>
                               </div>
-                              <div className="col-12 d-flex justify-content-end">
+                              <div className="col-12 d-flex justify-content-end mt-3">
                                 <span className="price my-auto">
                                   {pack.price} <img src={tokenimg} alt="" />
                                 </span>
                                 <button
-                                  onClick={() => handleBuyPackage(pack.package)}
+                                  /* onClick={() => handleBuyPackage(pack.package)} */
+                                  onClick={()=>sellForRadar(pack.price)}
                                   className="buy"
                                   style={{ borderColor: pack.color }}
                                 >
@@ -185,6 +316,7 @@ const Shop = () => {
                             </div>
                           </div>
                         ))}
+                          
                     </div>
                   </div>
                 </>
@@ -194,11 +326,13 @@ const Shop = () => {
                     <div className="row d-flex justify-content-center p-20">
                       <div className="col-12 p-0 d-flex justify-content-between">
                         <div className="input-container">
-                          <input className="input" 
-                          type="text" 
-                          value={searchTerm}
-                          onChange={handleSearchChange}
-                          placeholder="Search" />
+                          <input
+                            className="input"
+                            type="text"
+                            value={searchTerm}
+                            onChange={handleSearchChange}
+                            placeholder="Search"
+                          />
                           <span className="icon">
                             <img src={buyutec} alt="" />
                           </span>
@@ -222,13 +356,16 @@ const Shop = () => {
                                   </div>
                                   <div className="col-12">
                                     <p className="price">
-                                      {player.price} <img src={tokenimg} alt="" />
+                                      {player.price}{" "}
+                                      <img src={tokenimg} alt="" />
                                     </p>
-                                    {/* Check if the player is in your deck */}
-                                    {deckPlayerIds.size > 0 && deckPlayerIds.has(player.player_id) ? (
+                                    {deckPlayerIds.size > 0 &&
+                                    deckPlayerIds.has(player.player_id) ? (
                                       <button
                                         className="buy"
-                                        onClick={() => handleCallbackFromSale(player)}
+                                        onClick={() =>
+                                          handleCallbackFromSale(player)
+                                        }
                                       >
                                         CALLBACK
                                       </button>

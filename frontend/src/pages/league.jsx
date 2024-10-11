@@ -3,12 +3,14 @@ import React, { useEffect, useState } from "react";
 import podium from "../design/assets/prize.png";
 import MobilePage from "../modals/mobile";
 import tokenimg from "../design/assets/token.png";
+import walletimg from "../design/assets/wallet.svg";
 import infoimg from "../design/assets/info.png";
 import ModalHistory from "../modals/modalHistory";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import fetchAllRedux from "../redux/fetchAllRedux";
 import ModalInfo from "../modals/modalInfo";
+import ModalWallet from "../modals/modalWallet";
 
 
 const League = () => {
@@ -70,13 +72,11 @@ const League = () => {
   function getTimeUntilNextMonth() {
     const now = new Date();
     
-    // Calculate 11:00 PM on the first day of the next month
     const nextMonth11PM = new Date(now.getFullYear(), now.getMonth() + 1, 1, 23, 0, 0); 
 
     const timeDiff = nextMonth11PM - now; // Difference in milliseconds
 
     if (timeDiff <= 0) {
-      // If we passed 11:00 PM of the first of the next month, move to the next month
       return getTimeUntilNextMonth();
     }
 
@@ -87,8 +87,19 @@ const League = () => {
     return { days, hours, minutes };
   }
 
-  return (
-    <>
+  const [isWalletModalOpen, setWalletModalOpen] = useState(false);
+
+  const openWalletModal = () => {
+     setWalletModalOpen(true);
+   };
+ 
+   const closeWalletModal = () => {
+     setWalletModalOpen(false);
+   };
+   
+   return (
+     <>
+      <ModalWallet show={isWalletModalOpen} onClose={closeWalletModal} />
       <ModalHistory show={isModalOpen} onClose={closeModal} data={data}/>
       <ModalInfo show={isInfoModalOpen} onClose={closeInfoModal} data={data}/>
       <MobilePage data={true}>
@@ -99,6 +110,7 @@ const League = () => {
                 <h1 className="title m-0">LEAGUE</h1>
               </div>
               <div className="col-2 d-flex" style={{flexDirection:"row-reverse"}}>
+                <img onClick={()=>openWalletModal()} className="ms-2" src={walletimg} alt="" />
                 <div className="budgetWrapper">
                   <img className="token" src={tokenimg} alt="" />
                   <span className="budget">{user?.data?.user?.balance !== undefined ? user.data.user.balance : 'Loading...'}</span>
@@ -131,7 +143,6 @@ const League = () => {
                           <div className="col-2"></div>
                           <div className="col-5 text-start ">Player Name</div>
                           <div className="col-5 text-start ">Score</div>
-                          
                         </div>
                       </div>
                       <div className="col-12 p-0 scroll">

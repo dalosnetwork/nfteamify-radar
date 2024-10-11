@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from "react-redux";
 import fetchAllRedux from "../redux/fetchAllRedux.js";
 import { useNavigate } from "react-router";
 import { buyPackage, callbackFromSale } from "../api/ApiServices";
+import ModalWallet from "../modals/modalWallet.jsx";
+import walletimg from "../design/assets/wallet.svg"
 
 const Decks = () => {
   const dispatch = useDispatch();
@@ -67,9 +69,19 @@ const Decks = () => {
     } catch (error) {
     }
   };
+  const [isWalletModalOpen, setWalletModalOpen] = useState(false);
+
+  const openWalletModal = () => {
+     setWalletModalOpen(true);
+   };
+ 
+   const closeWalletModal = () => {
+     setWalletModalOpen(false);
+   };
 
   return (
     <>
+      <ModalWallet show={isWalletModalOpen} onClose={closeWalletModal} />
       <ModalTrain show={isModalOpen} onClose={closeModal} data={data} />
       <ModalSell show={isSellOpen} onClose={closeSell} data={data} />
       <MobilePage data={true}>
@@ -80,10 +92,12 @@ const Decks = () => {
                 <h1 className="title m-0">DECKS</h1>
               </div>
               <div className="col-2 d-flex" style={{ flexDirection: "row-reverse" }}>
+                <img onClick={()=>openWalletModal()} className="ms-2" src={walletimg} alt="" />
                 <div className="budgetWrapper">
                   <img className="token" src={tokenimg} alt="" />
                   <span className="budget">
-                    {user?.data?.user?.balance !== undefined ? user.data.user.balance : 'Loading...'}
+                    {/* {user?.data?.user?.balance !== undefined ? user.data.user.balance : 'Loading...'} */}
+                    {sessionStorage.getItem("balance")}
                   </span>
                 </div>
               </div>

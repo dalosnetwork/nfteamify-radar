@@ -4,12 +4,12 @@ import tokenimg from "../design/assets/token.png";
 import MobilePage from "../modals/mobile.jsx";
 import gift from "../design/assets/gift.png";
 import gift2 from "../design/assets/gift2.png";
-import ModalTrain from "../modals/modalTrain.jsx";
-import ModalSell from "../modals/modalSell.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import fetchAllRedux from "../redux/fetchAllRedux.js";
 import { useNavigate } from "react-router";
-import { buyPackage, callbackFromSale, completeMission } from "../api/ApiServices.js";
+import { completeMission } from "../api/ApiServices.js";
+import ModalWallet from "../modals/modalWallet.jsx";
+import walletimg from "../design/assets/wallet.svg"
 
 const Rewards = () => {
   const dispatch = useDispatch();
@@ -42,8 +42,19 @@ const Rewards = () => {
     }
   };
 
+  const [isWalletModalOpen, setWalletModalOpen] = useState(false);
+
+  const openWalletModal = () => {
+     setWalletModalOpen(true);
+   };
+ 
+   const closeWalletModal = () => {
+     setWalletModalOpen(false);
+   };
+
   return (
     <>
+      <ModalWallet show={isWalletModalOpen} onClose={closeWalletModal} />
       <MobilePage data={false}>
         <div id="rewards">
           <h1 className="header">
@@ -55,12 +66,14 @@ const Rewards = () => {
                 className="col-2 d-flex"
                 style={{ flexDirection: "row-reverse" }}
               >
+                <img onClick={()=>openWalletModal()} className="ms-2" src={walletimg} alt="" />
                 <div className="budgetWrapper">
                   <img className="token" src={tokenimg} alt="" />
                   <span className="budget">
-                    {user?.data?.user?.balance !== undefined
+                    {/* {user?.data?.user?.balance !== undefined
                       ? user.data.user.balance
-                      : "Loading..."}
+                      : "Loading..."} */}
+                      {sessionStorage.getItem("balance")}
                   </span>
                 </div>
               </div>

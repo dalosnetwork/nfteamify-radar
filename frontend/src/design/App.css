@@ -215,7 +215,9 @@ a:hover {
         display: flex;
         padding: 3px 6px;
         border: 1px solid #020a35;
-        border-radius: 5px; }
+        border-radius: 5px;
+        height: fit-content;
+        margin: auto; }
         .content.small .header .budgetWrapper .token {
           max-width: 24px;
           margin: auto 4px; }
@@ -263,7 +265,9 @@ a:hover {
       display: flex;
       padding: 3px 6px;
       border: 1px solid #020a35;
-      border-radius: 5px; }
+      border-radius: 5px;
+      height: fit-content;
+      margin: auto; }
       .content .header .budgetWrapper .token {
         max-width: 24px;
         margin: auto 4px; }
@@ -273,6 +277,25 @@ a:hover {
         font-size: 12px;
         font-weight: bold;
         color: #020a35; }
+
+/* Ensure dropdown appears on top */
+.dropdown-menu {
+  position: absolute;
+  z-index: 9999;
+  top: 100%; }
+
+/* Fix any potential overflow issues */
+#league, .container {
+  overflow: visible !important; }
+
+/* Ensure stacking context for header */
+.header {
+  position: relative;
+  z-index: 1; }
+
+body {
+  overflow-x: hidden;
+  overflow-y: visible !important; }
 
 .navback {
   clip-path: polygon(3% 20%, 97% 20%, 100% 10%, 100% 100%, 70% 100%, 30% 100%, 0 100%, 0 10%);
@@ -465,6 +488,91 @@ a:hover {
       color: #f2f1f1;
       border: 1px solid #f2f1f1; }
   .modal-card .row {
+    width: 100%; }
+
+.modal-wallet {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  z-index: 1000;
+  background: rgba(242, 241, 241, 0.8); }
+  .modal-wallet.show {
+    opacity: 1;
+    visibility: visible; }
+  .modal-wallet .modal {
+    height: 100%;
+    width: 100%;
+    font-size: 1.3rem;
+    color: #fff;
+    padding: 0 70px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    transform: scale(0.9);
+    transition: transform 0.3s ease-in-out;
+    display: none;
+    z-index: 1001; }
+    .modal-wallet .modal.show {
+      transform: scale(1);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center; }
+    .modal-wallet .modal .walletWrapper {
+      width: 90vw;
+      background-color: #d1d1d1;
+      padding: 17px 13px;
+      border-radius: 8px;
+      font-size: 10px;
+      color: #00051b;
+      position: relative; }
+      .modal-wallet .modal .walletWrapper div {
+        font-family: "Poppins", sans-serif; }
+        .modal-wallet .modal .walletWrapper div span {
+          font-family: "Poppins", sans-serif;
+          font-weight: bold; }
+      .modal-wallet .modal .walletWrapper .copy {
+        position: absolute;
+        right: 10px;
+        cursor: pointer; }
+  .modal-wallet .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer; }
+  .modal-wallet .modal-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    background-color: transparent !important;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 999; }
+    .modal-wallet .modal-content .text {
+      font-size: 18px; }
+    .modal-wallet .modal-content .image {
+      max-width: 250px; }
+    .modal-wallet .modal-content .button {
+      margin-top: 15px;
+      font-size: 16px;
+      width: 250px;
+      border-radius: 7px;
+      padding: 5px 0;
+      background-color: #00051b;
+      color: #f2f1f1;
+      border: 1px solid #f2f1f1; }
+  .modal-wallet .row {
     width: 100%; }
 
 .modal-train {

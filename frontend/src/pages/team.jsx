@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { lockTeam, unlockTeam, updateFirstEleven } from "../api/ApiServices.js";
 import fetchAllRedux from "../redux/fetchAllRedux.js";
 import { useNavigate } from "react-router";
+import ModalWallet from "../modals/modalWallet.jsx";
+import walletimg from "../design/assets/wallet.svg"
 
 const Team = () => {
   
@@ -125,494 +127,473 @@ const Team = () => {
       console.error('Error updating first eleven:', error);
     }
   };
+  const [isWalletModalOpen, setWalletModalOpen] = useState(false);
 
-
-  //SCROLL DENEME
-/*   const scrollableDivRef = useRef(null);
-
-  useEffect(() => {
-    const scrollableDiv = scrollableDivRef.current;
-
-    const handleTouchStart = (e) => {
-      // Prevent default touch behavior if the touch is within the scrollable div
-      if (scrollableDiv && scrollableDiv.contains(e.target)) {
-        e.preventDefault();
-      }
-    };
-
-    const handleTouchMove = (e) => {
-      // Implement custom scroll logic if necessary
-      // Example: calculate and set scrollTop or scrollLeft for the div based on touch movement
-      if (scrollableDiv && scrollableDiv.contains(e.target)) {
-        e.stopPropagation();
-      }
-    };
-
-    // Add touch event listeners
-    scrollableDiv.addEventListener('touchstart', handleTouchStart, { passive: false });
-    scrollableDiv.addEventListener('touchmove', handleTouchMove, { passive: false });
-
-    return () => {
-      // Clean up event listeners on component unmount
-      scrollableDiv.removeEventListener('touchstart', handleTouchStart);
-      scrollableDiv.removeEventListener('touchmove', handleTouchMove);
-    };
-  }, []); */
-  //SCROLL DENEME BİTİŞ
-
-
+  const openWalletModal = () => {
+     setWalletModalOpen(true);
+   };
+ 
+   const closeWalletModal = () => {
+     setWalletModalOpen(false);
+   };
   
   return (
-    <MobilePage data={isPicking}>
-      <div id="lineup">
-        <h1 className="header">
-          <div className="row d-flex justify-content-between">
-              <div className="col-2 my-auto">
-                {!isPicking ? (
-                  <>
-                    <h1 className="title m-0">LINEUP</h1>
-                  </>
-                ):(
-                  <>
-                    <img src={back} onClick={()=>setIsPicking(false)} className="back" alt="" />
-                  </>
-                )}
-              </div>
-              <div className="col-2 d-flex" style={{flexDirection:"row-reverse"}}>
-                <div className="budgetWrapper">
-                  <img className="token" src={tokenimg} alt="" />
-                  <span className="budget">{user?.data?.user?.balance !== undefined ? user.data.user.balance : 'Loading...'}</span>
+    <>
+      <ModalWallet show={isWalletModalOpen} onClose={closeWalletModal} />
+      <MobilePage data={isPicking}>
+        <div id="lineup">
+          <h1 className="header">
+            <div className="row d-flex justify-content-between">
+                <div className="col-2 my-auto">
+                  {!isPicking ? (
+                    <>
+                      <h1 className="title m-0">LINEUP</h1>
+                    </>
+                  ):(
+                    <>
+                      <img src={back} onClick={()=>setIsPicking(false)} className="back" alt="" />
+                    </>
+                  )}
                 </div>
-              </div>
-            </div>
-        </h1>
-        <div className="container">
-          <div className="row d-flex justify-content-center">
-            {!isPicking ? (
-              <div /* ref={scrollableDivRef} */ className="col-12 d-flex justify-content-center scroll">
-                <div className="pitchWrapper text-center">
-                  <div className="pitch">
-                    <div className="pitchInner d-flex justify-content-center">
-                      {firstEleven &&
-                        <div
-                          className="row d-flex justify-content-center text-center"
-                          style={{ height: "100%", width: "100%" }}
-                        >
-                          <div className="col-6 m-auto">
-                            {Object.values(firstEleven).find(player => player.position === 11 && player.data && Object.keys(player.data).length > 0) ? (
-                              <div className="playerWrapper">
-                                <div
-                                  className="pickedCircle"
-                                  onClick={() => {
-                                    handleIsPicking(11, "FRW");
-                                  }}
-                                >
-                                  <div className="innerCircle"></div>
-                                  <div className="number">
-                                    {Object.values(firstEleven).find(player => player.position === 11).data.number}
-                                  </div>
-                                </div>
-                                <div className="name">
-                                  {truncateName(Object.values(firstEleven).find(player => player.position === 11).data.name)}
-                                </div>
-                              </div>
-                            ) : (
-                              <div className="playerWrapper">
-                                <div
-                                  className="circle"
-                                  onClick={() => {
-                                    handleIsPicking(11, "FRW"); 
-                                  }}
-                                ></div>
-                              </div>
-                            )}
-                          </div>
-                          <div className="col-6 m-auto">
-                            {Object.values(firstEleven).find(player => player.position === 10 && player.data && Object.keys(player.data).length > 0) ? (
-                              <div className="playerWrapper">
-                                <div
-                                  className="pickedCircle"
-                                  onClick={() => {
-                                    handleIsPicking(10, "FRW");
-                                  }}
-                                >
-                                  <div className="innerCircle"></div>
-                                  <div className="number">
-                                    {Object.values(firstEleven).find(player => player.position === 10).data.number}
-                                  </div>
-                                </div>
-                                <div className="name">
-                                  {truncateName(Object.values(firstEleven).find(player => player.position === 10).data.name)}
-                                </div>
-                              </div>
-                            ) : (
-                              <div className="playerWrapper">
-                                <div
-                                  className="circle"
-                                  onClick={() => {
-                                    handleIsPicking(10, "FRW"); 
-                                  }}
-                                ></div>
-                              </div>
-                            )}
-                          </div>
-                          <div className="col-3 m-auto">
-                            {Object.values(firstEleven).find(player => player.position === 9 && player.data && Object.keys(player.data).length > 0) ? (
-                              <div className="playerWrapper">
-                                <div
-                                  className="pickedCircle"
-                                  onClick={() => {
-                                    handleIsPicking(9, "MD");
-                                  }}
-                                >
-                                  <div className="innerCircle"></div>
-                                  <div className="number">
-                                    {Object.values(firstEleven).find(player => player.position === 9).data.number}
-                                  </div>
-                                </div>
-                                <div className="name">
-                                  {truncateName(Object.values(firstEleven).find(player => player.position === 9).data.name)}
-                                </div>
-                              </div>
-                            ) : (
-                              <div className="playerWrapper">
-                                <div
-                                  className="circle"
-                                  onClick={() => {
-                                    handleIsPicking(9, "MD"); 
-                                  }}
-                                ></div>
-                              </div>
-                            )}
-                          </div>
-                          <div className="col-3 m-auto">
-                            {Object.values(firstEleven).find(player => player.position === 8 && player.data && Object.keys(player.data).length > 0) ? (
-                              <div className="playerWrapper">
-                                <div
-                                  className="pickedCircle"
-                                  onClick={() => {
-                                    handleIsPicking(8, "MD");
-                                  }}
-                                >
-                                  <div className="innerCircle"></div>
-                                  <div className="number">
-                                    {Object.values(firstEleven).find(player => player.position === 8).data.number}
-                                  </div>
-                                </div>
-                                <div className="name">
-                                  {truncateName(Object.values(firstEleven).find(player => player.position === 8).data.name)}
-                                </div>
-                              </div>
-                            ) : (
-                              <div className="playerWrapper">
-                                <div
-                                  className="circle"
-                                  onClick={() => {
-                                    handleIsPicking(8, "MD"); 
-                                  }}
-                                ></div>
-                              </div>
-                            )}
-                          </div>
-                          <div className="col-3 m-auto">
-                            {Object.values(firstEleven).find(player => player.position === 7 && player.data && Object.keys(player.data).length > 0) ? (
-                              <div className="playerWrapper">
-                                <div
-                                  className="pickedCircle"
-                                  onClick={() => {
-                                    handleIsPicking(7, "MD");
-                                  }}
-                                >
-                                  <div className="innerCircle"></div>
-                                  <div className="number">
-                                    {Object.values(firstEleven).find(player => player.position === 7).data.number}
-                                  </div>
-                                </div>
-                                <div className="name">
-                                  {truncateName(Object.values(firstEleven).find(player => player.position === 7).data.name)}
-                                </div>
-                              </div>
-                            ) : (
-                              <div className="playerWrapper">
-                                <div
-                                  className="circle"
-                                  onClick={() => {
-                                    handleIsPicking(7, "MD"); 
-                                  }}
-                                ></div>
-                              </div>
-                            )}
-                          </div>
-                          <div className="col-3 m-auto">
-                            {Object.values(firstEleven).find(player => player.position === 6 && player.data && Object.keys(player.data).length > 0) ? (
-                              <div className="playerWrapper">
-                                <div
-                                  className="pickedCircle"
-                                  onClick={() => {
-                                    handleIsPicking(6, "MD");
-                                  }}
-                                >
-                                  <div className="innerCircle"></div>
-                                  <div className="number">
-                                    {Object.values(firstEleven).find(player => player.position === 6).data.number}
-                                  </div>
-                                </div>
-                                <div className="name">
-                                  {truncateName(Object.values(firstEleven).find(player => player.position === 6).data.name)}
-                                </div>
-                              </div>
-                            ) : (
-                              <div className="playerWrapper">
-                                <div
-                                  className="circle"
-                                  onClick={() => {
-                                    handleIsPicking(6, "MD"); 
-                                  }}
-                                ></div>
-                              </div>
-                            )}
-                          </div>
-                          <div className="col-3 m-auto">
-                            {Object.values(firstEleven).find(player => player.position === 5 && player.data && Object.keys(player.data).length > 0) ? (
-                              <div className="playerWrapper">
-                                <div
-                                  className="pickedCircle"
-                                  onClick={() => {
-                                    handleIsPicking(5, "DEF");
-                                  }}
-                                >
-                                  <div className="innerCircle"></div>
-                                  <div className="number">
-                                    {Object.values(firstEleven).find(player => player.position === 5).data.number}
-                                  </div>
-                                </div>
-                                <div className="name">
-                                  {truncateName(Object.values(firstEleven).find(player => player.position === 5).data.name)}
-                                </div>
-                              </div>
-                            ) : (
-                              <div className="playerWrapper">
-                                <div
-                                  className="circle"
-                                  onClick={() => {
-                                    handleIsPicking(5, "DEF"); 
-                                  }}
-                                ></div>
-                              </div>
-                            )}
-                          </div>
-                          <div className="col-3 m-auto">
-                            {Object.values(firstEleven).find(player => player.position === 4 && player.data && Object.keys(player.data).length > 0) ? (
-                              <div className="playerWrapper">
-                                <div
-                                  className="pickedCircle"
-                                  onClick={() => {
-                                    handleIsPicking(4, "DEF");
-                                  }}
-                                >
-                                  <div className="innerCircle"></div>
-                                  <div className="number">
-                                    {Object.values(firstEleven).find(player => player.position === 4).data.number}
-                                  </div>
-                                </div>
-                                <div className="name">
-                                  {truncateName(Object.values(firstEleven).find(player => player.position === 4).data.name)}
-                                </div>
-                              </div>
-                            ) : (
-                              <div className="playerWrapper">
-                                <div
-                                  className="circle"
-                                  onClick={() => {
-                                    handleIsPicking(4, "DEF"); 
-                                  }}
-                                ></div>
-                              </div>
-                            )}
-                          </div>
-                          <div className="col-3 m-auto">
-                            {Object.values(firstEleven).find(player => player.position === 3 && player.data && Object.keys(player.data).length > 0) ? (
-                              <div className="playerWrapper">
-                                <div
-                                  className="pickedCircle"
-                                  onClick={() => {
-                                    handleIsPicking(3, "DEF");
-                                  }}
-                                >
-                                  <div className="innerCircle"></div>
-                                  <div className="number">
-                                    {Object.values(firstEleven).find(player => player.position === 3).data.number}
-                                  </div>
-                                </div>
-                                <div className="name">
-                                  {truncateName(Object.values(firstEleven).find(player => player.position === 3).data.name)}
-                                </div>
-                              </div>
-                            ) : (
-                              <div className="playerWrapper">
-                                <div
-                                  className="circle"
-                                  onClick={() => {
-                                    handleIsPicking(3, "DEF"); 
-                                  }}
-                                ></div>
-                              </div>
-                            )}
-                          </div>
-                          <div className="col-3 m-auto">
-                            {Object.values(firstEleven).find(player => player.position === 2 && player.data && Object.keys(player.data).length > 0) ? (
-                              <div className="playerWrapper">
-                                <div
-                                  className="pickedCircle"
-                                  onClick={() => {
-                                    handleIsPicking(2, "DEF");
-                                  }}
-                                >
-                                  <div className="innerCircle"></div>
-                                  <div className="number">
-                                    {Object.values(firstEleven).find(player => player.position === 2).data.number}
-                                  </div>
-                                </div>
-                                <div className="name">
-                                  {truncateName(Object.values(firstEleven).find(player => player.position === 2).data.name)}
-                                </div>
-                              </div>
-                            ) : (
-                              <div className="playerWrapper">
-                                <div
-                                  className="circle"
-                                  onClick={() => {
-                                    handleIsPicking(2, "DEF"); 
-                                  }}
-                                ></div>
-                              </div>
-                            )}
-                          </div>
-                          <div className="col-12 m-auto">
-                            {Object.values(firstEleven).find(player => player.position === 1 && player.data && Object.keys(player.data).length > 0) ? (
-                              <div className="playerWrapper">
-                                <div
-                                  className="pickedCircle"
-                                  onClick={() => {
-                                    handleIsPicking(1, "GK");
-                                  }}
-                                >
-                                  <div className="innerCircle"></div>
-                                  <div className="number">
-                                    {Object.values(firstEleven).find(player => player.position === 1).data.number}
-                                  </div>
-                                </div>
-                                <div className="name">
-                                  {truncateName(Object.values(firstEleven).find(player => player.position === 1).data.name)}
-                                </div>
-                              </div>
-                            ) : (
-                              <div className="playerWrapper">
-                                <div
-                                  className="circle"
-                                  onClick={() => {
-                                    handleIsPicking(1, "GK"); 
-                                  }}
-                                ></div>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      }
-                    </div>
+                <div className="col-2 d-flex" style={{flexDirection:"row-reverse"}}>
+                  <img onClick={()=>openWalletModal()} className="ms-2" src={walletimg} alt="" />
+                  <div className="budgetWrapper">
+                    <img className="token" src={tokenimg} alt="" />
+                    <span className="budget">{/* {user?.data?.user?.balance !== undefined ? user.data.user.balance : 'Loading...'} */}
+                    {sessionStorage.getItem("balance")}
+                    </span>
                   </div>
-                  {/* { isLocked ? (<>
-                    <button className="play" onClick={()=>handleUnlockTeam(false)}>Edit Team</button>
-                  </>):(<>
-                    <button className="play" onClick={()=>handleUpdateFirstEleven()}>Save</button>
-                  </>)
-                  } */}
                 </div>
               </div>
-            ) : (
-              <div className="col-12 p-0 text-center">
-   
-                <div className="input-container px-2">
-                  <span className="icon">
-                    <img src={buyutec} alt="" />
-                  </span>
-                  <input className="input" type="text" placeholder="Search player" value={searchTerm} onChange={handleSearchChange}/>
-                </div>
-                <div  className="playersWrapper px-2 scroll deck">
-                  <div className="accordion" id="accordionExample">
-                    {filteredPlayers.length > 0 ? (
-                      filteredPlayers.map((player, index) => (
-                        <div className="accordion-item mb-4" key={index}>
-                          <h2 className="accordion-header" id={`heading${index}`}>
-                            <button
-                              className="accordion-button collapsed"
-                              type="button"
-                              data-bs-toggle="collapse"
-                              data-bs-target={`#collapse${index}`}
-                              aria-expanded="true"
-                              aria-controls={`collapse${index}`}
-                            >
-                              <div className="d-flex playerTop">
-                                <div className="form-check">
-                                  <input onChange={()=>handleAddEleven(player.player_id)} className="form-check-input" style={{ border: "1px solid #ffff" }} type="checkbox" value="" id={`flexCheckDefault${index}`} />
-                                </div>
-                                <div className="my-auto index">{player.number}</div>
-                                <div className="my-auto name">{player.name}</div>
-                                <div className="my-auto position">{player.position}</div>
-                                <div className="my-auto rating">{player.Overall}</div>
-                              </div>
-                            </button>
-                          </h2>
+          </h1>
+          <div className="container">
+            <div className="row d-flex justify-content-center">
+              {!isPicking ? (
+                <div /* ref={scrollableDivRef} */ className="col-12 d-flex justify-content-center scroll">
+                  <div className="pitchWrapper text-center">
+                    <div className="pitch">
+                      <div className="pitchInner d-flex justify-content-center">
+                        {firstEleven &&
                           <div
-                            id={`collapse${index}`}
-                            className="accordion-collapse collapse"
-                            aria-labelledby={`heading${index}`}
-                            data-bs-parent="#accordionExample"
+                            className="row d-flex justify-content-center text-center"
+                            style={{ height: "100%", width: "100%" }}
                           >
-                            <div className="accordion-body">
-                              <div className="playerBottom">
-                                <div className="row">
-                                  <div className="col-2">
-                                    <div className="col-12">NAT</div>
-                                    <div className="col-12">{player.nationality}</div>
+                            <div className="col-6 m-auto">
+                              {Object.values(firstEleven).find(player => player.position === 11 && player.data && Object.keys(player.data).length > 0) ? (
+                                <div className="playerWrapper">
+                                  <div
+                                    className="pickedCircle"
+                                    onClick={() => {
+                                      handleIsPicking(11, "FRW");
+                                    }}
+                                  >
+                                    <div className="innerCircle"></div>
+                                    <div className="number">
+                                      {Object.values(firstEleven).find(player => player.position === 11).data.number}
+                                    </div>
                                   </div>
-                                  <div className="col-2">
-                                    <div className="col-12">AGE</div>
-                                    <div className="col-12">{player.age}</div>
+                                  <div className="name">
+                                    {truncateName(Object.values(firstEleven).find(player => player.position === 11).data.name)}
                                   </div>
-                                  <div className="col-2">
-                                    <div className="col-12">FRW</div>
-                                    <div className="col-12">{player.FRW}</div>
+                                </div>
+                              ) : (
+                                <div className="playerWrapper">
+                                  <div
+                                    className="circle"
+                                    onClick={() => {
+                                      handleIsPicking(11, "FRW"); 
+                                    }}
+                                  ></div>
+                                </div>
+                              )}
+                            </div>
+                            <div className="col-6 m-auto">
+                              {Object.values(firstEleven).find(player => player.position === 10 && player.data && Object.keys(player.data).length > 0) ? (
+                                <div className="playerWrapper">
+                                  <div
+                                    className="pickedCircle"
+                                    onClick={() => {
+                                      handleIsPicking(10, "FRW");
+                                    }}
+                                  >
+                                    <div className="innerCircle"></div>
+                                    <div className="number">
+                                      {Object.values(firstEleven).find(player => player.position === 10).data.number}
+                                    </div>
                                   </div>
-                                  <div className="col-2">
-                                    <div className="col-12">MD</div>
-                                    <div className="col-12">{player.MD}</div>
+                                  <div className="name">
+                                    {truncateName(Object.values(firstEleven).find(player => player.position === 10).data.name)}
                                   </div>
-                                  <div className="col-2">
-                                    <div className="col-12">DEF</div>
-                                    <div className="col-12">{player.DEF}</div>
+                                </div>
+                              ) : (
+                                <div className="playerWrapper">
+                                  <div
+                                    className="circle"
+                                    onClick={() => {
+                                      handleIsPicking(10, "FRW"); 
+                                    }}
+                                  ></div>
+                                </div>
+                              )}
+                            </div>
+                            <div className="col-3 m-auto">
+                              {Object.values(firstEleven).find(player => player.position === 9 && player.data && Object.keys(player.data).length > 0) ? (
+                                <div className="playerWrapper">
+                                  <div
+                                    className="pickedCircle"
+                                    onClick={() => {
+                                      handleIsPicking(9, "MD");
+                                    }}
+                                  >
+                                    <div className="innerCircle"></div>
+                                    <div className="number">
+                                      {Object.values(firstEleven).find(player => player.position === 9).data.number}
+                                    </div>
                                   </div>
-                                  <div className="col-2">
-                                    <div className="col-12">GK</div>
-                                    <div className="col-12">{player.GK}</div>
+                                  <div className="name">
+                                    {truncateName(Object.values(firstEleven).find(player => player.position === 9).data.name)}
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="playerWrapper">
+                                  <div
+                                    className="circle"
+                                    onClick={() => {
+                                      handleIsPicking(9, "MD"); 
+                                    }}
+                                  ></div>
+                                </div>
+                              )}
+                            </div>
+                            <div className="col-3 m-auto">
+                              {Object.values(firstEleven).find(player => player.position === 8 && player.data && Object.keys(player.data).length > 0) ? (
+                                <div className="playerWrapper">
+                                  <div
+                                    className="pickedCircle"
+                                    onClick={() => {
+                                      handleIsPicking(8, "MD");
+                                    }}
+                                  >
+                                    <div className="innerCircle"></div>
+                                    <div className="number">
+                                      {Object.values(firstEleven).find(player => player.position === 8).data.number}
+                                    </div>
+                                  </div>
+                                  <div className="name">
+                                    {truncateName(Object.values(firstEleven).find(player => player.position === 8).data.name)}
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="playerWrapper">
+                                  <div
+                                    className="circle"
+                                    onClick={() => {
+                                      handleIsPicking(8, "MD"); 
+                                    }}
+                                  ></div>
+                                </div>
+                              )}
+                            </div>
+                            <div className="col-3 m-auto">
+                              {Object.values(firstEleven).find(player => player.position === 7 && player.data && Object.keys(player.data).length > 0) ? (
+                                <div className="playerWrapper">
+                                  <div
+                                    className="pickedCircle"
+                                    onClick={() => {
+                                      handleIsPicking(7, "MD");
+                                    }}
+                                  >
+                                    <div className="innerCircle"></div>
+                                    <div className="number">
+                                      {Object.values(firstEleven).find(player => player.position === 7).data.number}
+                                    </div>
+                                  </div>
+                                  <div className="name">
+                                    {truncateName(Object.values(firstEleven).find(player => player.position === 7).data.name)}
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="playerWrapper">
+                                  <div
+                                    className="circle"
+                                    onClick={() => {
+                                      handleIsPicking(7, "MD"); 
+                                    }}
+                                  ></div>
+                                </div>
+                              )}
+                            </div>
+                            <div className="col-3 m-auto">
+                              {Object.values(firstEleven).find(player => player.position === 6 && player.data && Object.keys(player.data).length > 0) ? (
+                                <div className="playerWrapper">
+                                  <div
+                                    className="pickedCircle"
+                                    onClick={() => {
+                                      handleIsPicking(6, "MD");
+                                    }}
+                                  >
+                                    <div className="innerCircle"></div>
+                                    <div className="number">
+                                      {Object.values(firstEleven).find(player => player.position === 6).data.number}
+                                    </div>
+                                  </div>
+                                  <div className="name">
+                                    {truncateName(Object.values(firstEleven).find(player => player.position === 6).data.name)}
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="playerWrapper">
+                                  <div
+                                    className="circle"
+                                    onClick={() => {
+                                      handleIsPicking(6, "MD"); 
+                                    }}
+                                  ></div>
+                                </div>
+                              )}
+                            </div>
+                            <div className="col-3 m-auto">
+                              {Object.values(firstEleven).find(player => player.position === 5 && player.data && Object.keys(player.data).length > 0) ? (
+                                <div className="playerWrapper">
+                                  <div
+                                    className="pickedCircle"
+                                    onClick={() => {
+                                      handleIsPicking(5, "DEF");
+                                    }}
+                                  >
+                                    <div className="innerCircle"></div>
+                                    <div className="number">
+                                      {Object.values(firstEleven).find(player => player.position === 5).data.number}
+                                    </div>
+                                  </div>
+                                  <div className="name">
+                                    {truncateName(Object.values(firstEleven).find(player => player.position === 5).data.name)}
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="playerWrapper">
+                                  <div
+                                    className="circle"
+                                    onClick={() => {
+                                      handleIsPicking(5, "DEF"); 
+                                    }}
+                                  ></div>
+                                </div>
+                              )}
+                            </div>
+                            <div className="col-3 m-auto">
+                              {Object.values(firstEleven).find(player => player.position === 4 && player.data && Object.keys(player.data).length > 0) ? (
+                                <div className="playerWrapper">
+                                  <div
+                                    className="pickedCircle"
+                                    onClick={() => {
+                                      handleIsPicking(4, "DEF");
+                                    }}
+                                  >
+                                    <div className="innerCircle"></div>
+                                    <div className="number">
+                                      {Object.values(firstEleven).find(player => player.position === 4).data.number}
+                                    </div>
+                                  </div>
+                                  <div className="name">
+                                    {truncateName(Object.values(firstEleven).find(player => player.position === 4).data.name)}
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="playerWrapper">
+                                  <div
+                                    className="circle"
+                                    onClick={() => {
+                                      handleIsPicking(4, "DEF"); 
+                                    }}
+                                  ></div>
+                                </div>
+                              )}
+                            </div>
+                            <div className="col-3 m-auto">
+                              {Object.values(firstEleven).find(player => player.position === 3 && player.data && Object.keys(player.data).length > 0) ? (
+                                <div className="playerWrapper">
+                                  <div
+                                    className="pickedCircle"
+                                    onClick={() => {
+                                      handleIsPicking(3, "DEF");
+                                    }}
+                                  >
+                                    <div className="innerCircle"></div>
+                                    <div className="number">
+                                      {Object.values(firstEleven).find(player => player.position === 3).data.number}
+                                    </div>
+                                  </div>
+                                  <div className="name">
+                                    {truncateName(Object.values(firstEleven).find(player => player.position === 3).data.name)}
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="playerWrapper">
+                                  <div
+                                    className="circle"
+                                    onClick={() => {
+                                      handleIsPicking(3, "DEF"); 
+                                    }}
+                                  ></div>
+                                </div>
+                              )}
+                            </div>
+                            <div className="col-3 m-auto">
+                              {Object.values(firstEleven).find(player => player.position === 2 && player.data && Object.keys(player.data).length > 0) ? (
+                                <div className="playerWrapper">
+                                  <div
+                                    className="pickedCircle"
+                                    onClick={() => {
+                                      handleIsPicking(2, "DEF");
+                                    }}
+                                  >
+                                    <div className="innerCircle"></div>
+                                    <div className="number">
+                                      {Object.values(firstEleven).find(player => player.position === 2).data.number}
+                                    </div>
+                                  </div>
+                                  <div className="name">
+                                    {truncateName(Object.values(firstEleven).find(player => player.position === 2).data.name)}
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="playerWrapper">
+                                  <div
+                                    className="circle"
+                                    onClick={() => {
+                                      handleIsPicking(2, "DEF"); 
+                                    }}
+                                  ></div>
+                                </div>
+                              )}
+                            </div>
+                            <div className="col-12 m-auto">
+                              {Object.values(firstEleven).find(player => player.position === 1 && player.data && Object.keys(player.data).length > 0) ? (
+                                <div className="playerWrapper">
+                                  <div
+                                    className="pickedCircle"
+                                    onClick={() => {
+                                      handleIsPicking(1, "GK");
+                                    }}
+                                  >
+                                    <div className="innerCircle"></div>
+                                    <div className="number">
+                                      {Object.values(firstEleven).find(player => player.position === 1).data.number}
+                                    </div>
+                                  </div>
+                                  <div className="name">
+                                    {truncateName(Object.values(firstEleven).find(player => player.position === 1).data.name)}
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="playerWrapper">
+                                  <div
+                                    className="circle"
+                                    onClick={() => {
+                                      handleIsPicking(1, "GK"); 
+                                    }}
+                                  ></div>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        }
+                      </div>
+                    </div>
+                    {/* { isLocked ? (<>
+                      <button className="play" onClick={()=>handleUnlockTeam(false)}>Edit Team</button>
+                    </>):(<>
+                      <button className="play" onClick={()=>handleUpdateFirstEleven()}>Save</button>
+                    </>)
+                    } */}
+                  </div>
+                </div>
+              ) : (
+                <div className="col-12 p-0 text-center">
+    
+                  <div className="input-container px-2">
+                    <span className="icon">
+                      <img src={buyutec} alt="" />
+                    </span>
+                    <input className="input" type="text" placeholder="Search player" value={searchTerm} onChange={handleSearchChange}/>
+                  </div>
+                  <div  className="playersWrapper px-2 scroll deck">
+                    <div className="accordion" id="accordionExample">
+                      {filteredPlayers.length > 0 ? (
+                        filteredPlayers.map((player, index) => (
+                          <div className="accordion-item mb-4" key={index}>
+                            <h2 className="accordion-header" id={`heading${index}`}>
+                              <button
+                                className="accordion-button collapsed"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target={`#collapse${index}`}
+                                aria-expanded="true"
+                                aria-controls={`collapse${index}`}
+                              >
+                                <div className="d-flex playerTop">
+                                  <div className="form-check">
+                                    <input onChange={()=>handleAddEleven(player.player_id)} className="form-check-input" style={{ border: "1px solid #ffff" }} type="checkbox" value="" id={`flexCheckDefault${index}`} />
+                                  </div>
+                                  <div className="my-auto index">{player.number}</div>
+                                  <div className="my-auto name">{player.name}</div>
+                                  <div className="my-auto position">{player.position}</div>
+                                  <div className="my-auto rating">{player.Overall}</div>
+                                </div>
+                              </button>
+                            </h2>
+                            <div
+                              id={`collapse${index}`}
+                              className="accordion-collapse collapse"
+                              aria-labelledby={`heading${index}`}
+                              data-bs-parent="#accordionExample"
+                            >
+                              <div className="accordion-body">
+                                <div className="playerBottom">
+                                  <div className="row">
+                                    <div className="col-2">
+                                      <div className="col-12">NAT</div>
+                                      <div className="col-12">{player.nationality}</div>
+                                    </div>
+                                    <div className="col-2">
+                                      <div className="col-12">AGE</div>
+                                      <div className="col-12">{player.age}</div>
+                                    </div>
+                                    <div className="col-2">
+                                      <div className="col-12">FRW</div>
+                                      <div className="col-12">{player.FRW}</div>
+                                    </div>
+                                    <div className="col-2">
+                                      <div className="col-12">MD</div>
+                                      <div className="col-12">{player.MD}</div>
+                                    </div>
+                                    <div className="col-2">
+                                      <div className="col-12">DEF</div>
+                                      <div className="col-12">{player.DEF}</div>
+                                    </div>
+                                    <div className="col-2">
+                                      <div className="col-12">GK</div>
+                                      <div className="col-12">{player.GK}</div>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      ))
-                    ) : (
-                      <p>No players found</p>
-                    )}
+                        ))
+                      ) : (
+                        <p>No players found</p>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
-      </div>
-    </MobilePage>
+      </MobilePage>
+    </>
   );
 };
 
